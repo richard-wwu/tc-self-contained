@@ -1,0 +1,69 @@
+package:
+  name: tensor_comprehensions
+  version: "{{ environ.get('TC_BUILD_VERSION') }}"
+
+source:
+  git_url: https://github.com/facebookresearch/TensorComprehensions.git
+  git_rev: "{{ environ.get('TC_GIT_HASH') }}"
+
+requirements:
+  build:
+    - llvm-trunk==1.0.0
+    - halide==1.0.0
+    - caffe2==1.0.0
+    - pytorch==0.4.0
+    - pyyaml
+    - cmake
+    - setuptools
+
+  run:
+    - llvm-trunk==1.0.0
+    - halide==1.0.0
+    - caffe2==1.0.0
+    - pytorch==0.4.0
+    - pyyaml
+    - cmake
+    - setuptools
+
+build:
+  number: {{ environ.get('TC_BUILD_NUMBER') }}
+  skip: True   # [win]
+
+test:
+  imports:
+    - torch
+    - torch.cuda
+    - torch.utils
+    - tensor_comprehensions
+    - tensor_comprehensions.tc
+
+  source_files:
+    - test_python
+
+  commands:
+    - test -f $PREFIX/lib/libtc_aten.so
+    - test -f $PREFIX/lib/libtc_autotuner.so
+    - test -f $PREFIX/lib/libtc_core.so
+    - test -f $PREFIX/lib/libtc_lang.so
+    - test -f $PREFIX/lib/libtc_proto.so
+
+    - test -f $PREFIX/lib*/libgflags.a
+    - test -f $PREFIX/lib*/libglog.a
+    - test -f $PREFIX/lib*/libgtest_main.a
+    - test -f $PREFIX/lib*/libgtest.a
+    - test -f $PREFIX/lib*/libgprotobuf.a
+
+    - test -d $PREFIX/include/dlpack
+    - test -d $PREFIX/include/gtest
+    - test -d $PREFIX/include/cub
+
+    - ./test_python/run_test.sh
+
+about:
+  home: https://github.com/facebookresearch/TensorComprehensions
+  license: Apache 2.0
+  summary: A domain specific language to express machine learning workloads
+
+extra:
+  recipe-maintainers:
+    - nicolasvasilache

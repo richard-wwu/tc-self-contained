@@ -1,0 +1,49 @@
+FROM nvidia/cuda:8.0-cudnn7-devel-ubuntu14.04
+RUN ln -s /usr/local/cuda/targets/x86_64-linux/lib/stubs/libcuda.so /usr/local/cuda/targets/x86_64-linux/lib/stubs/libcuda.so.1
+
+RUN echo "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-4.0 main" >> /etc/apt/sources.list
+RUN apt-get update
+
+RUN apt-get install -y --no-install-recommends make
+RUN apt-get install -y --no-install-recommends git
+RUN apt-get install -y --no-install-recommends libgoogle-glog-dev
+RUN apt-get install -y --no-install-recommends libgtest-dev
+RUN apt-get install -y --no-install-recommends libgmp3-dev
+RUN apt-get install -y --no-install-recommends libz-dev
+RUN apt-get install -y --no-install-recommends automake
+RUN apt-get install -y --no-install-recommends libtool
+RUN apt-get install -y --no-install-recommends ssh
+RUN apt-get install -y --no-install-recommends libyaml-dev
+RUN apt-get install -y --no-install-recommends realpath
+RUN apt-get install -y --no-install-recommends wget unzip
+
+RUN apt-get install -y --no-install-recommends llvm-4.0-dev libclang-4.0-dev clang-format-4.0 libclang1-4.0 --force-yes
+
+ENV PATH /opt/conda/bin:$PATH
+
+RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh &&\
+    wget --quiet https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh --no-check-certificate -O /anaconda.sh &&\
+    chmod +x anaconda.sh &&\
+    /anaconda.sh -b -p /opt/conda &&\
+    rm /anaconda.sh
+
+RUN conda install \
+         numpy\
+         decorator\
+         six\
+         future\
+         cmake
+
+RUN wget --quiet https://github.com/google/protobuf/archive/v3.4.0.zip --no-check-certificate -O /proto.zip &&\
+    unzip -qq /proto.zip -d /
+
+RUN cd /protobuf-3.4.0 && ./autogen.sh && ./configure &&\
+    make
+RUN cd /protobuf-3.4.0 && make install && ldconfig &&\
+    rm /proto.zip
+
+
+RUN conda install -c anaconda protobuf
+
+ENV PATH /usr/local/bin:$PATH
+RUN apt-get install -y --no-install-recommends ca-certificates

@@ -1,0 +1,1 @@
+see the [instructions](docs/source/installation.rst).

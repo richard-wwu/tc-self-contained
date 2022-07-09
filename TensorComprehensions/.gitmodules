@@ -1,0 +1,20 @@
+# Development branches, we modify those heavily
+[submodule "third-party/islpp"]
+	path = third-party/islpp
+	url = https://github.com/nicolasvasilache/isl.git
+	branch = ntv_dev
+[submodule "third-party/cub"]
+	path = third-party/cub
+        url = https://github.com/nicolasvasilache/cub.git
+	branch = nvrtc-cub
+
+# Mainstream branches, we don't modify those
+[submodule "third-party/dlpack"]
+	path = third-party/dlpack
+	url = https://github.com/dmlc/dlpack.git
+[submodule "third-party/pybind11"]
+ 	path = third-party/pybind11
+	url = https://github.com/pybind/pybind11.git
+[submodule "third-party/googlelibraries"]
+	path = third-party/googlelibraries
+	url = https://github.com/nicolasvasilache/googlelibraries.git

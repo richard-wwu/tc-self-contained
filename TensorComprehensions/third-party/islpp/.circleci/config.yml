@@ -1,0 +1,57 @@
+version: 2
+jobs:
+  "build-1404":
+    working_directory: ~/isl
+    resource_class: xlarge
+    docker:
+      - image: nicolasvasilache/tc-1404-llvm4.0-src:latest
+
+    steps:
+      - checkout
+
+      - run:
+          name: build-isl
+          command: |
+            cd ~/isl
+            ./autogen.sh
+            mkdir -p build
+            cd build
+            ../configure --with-clang-prefix=/clang+llvm-4.0
+            make -j 16
+
+      - run:
+          name: test_isl
+          command: |
+            cd ~/isl/build
+            make check VERBOSE=1
+
+  "build-1604":
+    working_directory: ~/isl
+    resource_class: xlarge
+    docker:
+      - image: nicolasvasilache/tc-1604-llvm4.0-src:latest
+
+    steps:
+      - checkout
+
+      - run:
+          name: build-isl
+          command: |
+            cd ~/isl
+            ./autogen.sh
+            mkdir -p build
+            cd build
+            ../configure --with-clang-prefix=/clang+llvm-4.0
+            make -j 16
+
+      - run:
+          name: test_isl
+          command: |
+            cd ~/isl/build
+            make check VERBOSE=1
+workflows:
+  version: 2
+  build:
+    jobs:
+      - "build-1404"
+      - "build-1604"

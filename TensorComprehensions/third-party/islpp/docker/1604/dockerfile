@@ -1,0 +1,28 @@
+FROM nvidia/cuda:8.0-cudnn7-devel-ubuntu16.04
+RUN ln -s /usr/local/cuda/targets/x86_64-linux/lib/stubs/libcuda.so /usr/local/cuda/targets/x86_64-linux/lib/stubs/libcuda.so.1
+
+RUN echo "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main" >> /etc/apt/sources.list
+RUN apt-get update
+
+RUN apt-get install -y --no-install-recommends build-essential
+RUN apt-get install -y --no-install-recommends cmake
+RUN apt-get install -y --no-install-recommends git
+RUN apt-get install -y --no-install-recommends libgoogle-glog-dev
+RUN apt-get install -y --no-install-recommends libgtest-dev
+RUN apt-get install -y --no-install-recommends automake
+RUN apt-get install -y --no-install-recommends libgmp3-dev
+RUN apt-get install -y --no-install-recommends libtool
+RUN apt-get install -y --no-install-recommends protobuf-compiler libprotobuf-dev
+RUN apt-get install -y --no-install-recommends ssh
+RUN apt-get install -y --no-install-recommends libyaml-dev
+RUN apt-get install -y --no-install-recommends realpath
+
+RUN apt-get install -y --no-install-recommends llvm-4.0-dev libclang-4.0-dev clang-format-4.0 --force-yes
+
+RUN apt-get install -y --no-install-recommends python3-dev python3-pip python3-setuptools
+RUN pip3 install \
+         numpy\
+         decorator\
+         six\
+         future\
+         protobuf
